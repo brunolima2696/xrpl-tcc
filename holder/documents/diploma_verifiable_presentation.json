@@ -1,0 +1,33 @@
+{
+    "@context": "https://www.w3.org/TR/vc-data-model-2.0/#verifiable-presentations",
+    "type": [
+        "VerifiablePresentation",
+        "UniversityDegreeVP"
+    ],
+    "holder": "did:xrpl:2:rNH4PgbHE4JCoH7PvSjFnrXv18A8qk4nJv",
+    "verifiableCredential": {
+        "@context": "https://xrpl.org/docs/references/protocol/ledger-data/ledger-entry-types/credential",
+        "type": [
+            "XRPLCredential",
+            "XRPLDegreeCredential"
+        ],
+        "issuer": "did:xrpl:2:rL7oLd4KDXcCfjPcCWpLF7WGATxPG7gcVp",
+        "credentialRef": [
+            {
+                "credential_ref_type": "XRPLCredential",
+                "network_id": "2",
+                "issuer": "rL7oLd4KDXcCfjPcCWpLF7WGATxPG7gcVp",
+                "subject": "rNH4PgbHE4JCoH7PvSjFnrXv18A8qk4nJv",
+                "credential_type": "XRPLDegree",
+                "index": "A86D024DEC8C22CC42FCB32DC504B2166CDE014E67035C3E9E8E0F3B16C3498A"
+            }
+        ]
+    },
+    "proof": {
+        "type": "Ed25519Signature",
+        "created": "2026-03-11T11:51:34.296216-03:00",
+        "proofPurpose": "authentication",
+        "verificationMethod": "did:xrpl:2:rNH4PgbHE4JCoH7PvSjFnrXv18A8qk4nJv#key-1",
+        "jws": "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJAY29udGV4dCI6Imh0dHBzOi8vd3d3LnczLm9yZy9UUi92Yy1kYXRhLW1vZGVsLTIuMC8jdmVyaWZpYWJsZS1wcmVzZW50YXRpb25zIiwiaG9sZGVyIjoiZGlkOnhycGw6MjpyTkg0UGdiSEU0SkNvSDdQdlNqRm5yWHYxOEE4cWs0bkp2IiwidHlwZSI6WyJWZXJpZmlhYmxlUHJlc2VudGF0aW9uIiwiVW5pdmVyc2l0eURlZ3JlZVZQIl0sInZlcmlmaWFibGVDcmVkZW50aWFsIjp7IkBjb250ZXh0IjoiaHR0cHM6Ly94cnBsLm9yZy9kb2NzL3JlZmVyZW5jZXMvcHJvdG9jb2wvbGVkZ2VyLWRhdGEvbGVkZ2VyLWVudHJ5LXR5cGVzL2NyZWRlbnRpYWwiLCJjcmVkZW50aWFsUmVmIjpbeyJjcmVkZW50aWFsX3JlZl90eXBlIjoiWFJQTENyZWRlbnRpYWwiLCJjcmVkZW50aWFsX3R5cGUiOiJYUlBMRGVncmVlIiwiaW5kZXgiOiJBODZEMDI0REVDOEMyMkNDNDJGQ0IzMkRDNTA0QjIxNjZDREUwMTRFNjcwMzVDM0U5RThFMEYzQjE2QzM0OThBIiwiaXNzdWVyIjoickw3b0xkNEtEWGNDZmpQY0NXcExGN1dHQVR4UEc3Z2NWcCIsIm5ldHdvcmtfaWQiOiIyIiwic3ViamVjdCI6InJOSDRQZ2JIRTRKQ29IN1B2U2pGbnJYdjE4QThxazRuSnYifV0sImlzc3VlciI6ImRpZDp4cnBsOjI6ckw3b0xkNEtEWGNDZmpQY0NXcExGN1dHQVR4UEc3Z2NWcCIsInR5cGUiOlsiWFJQTENyZWRlbnRpYWwiLCJYUlBMRGVncmVlQ3JlZGVudGlhbCJdfX0.mcyALDYWFrNSeEbIuXkwNyG1sLiVvrJztyklbFpiGkmRtLjZ_R9V1tdeIrnGxp528875LhVq-NHdYT5AM7tmBA"
+    }
+}

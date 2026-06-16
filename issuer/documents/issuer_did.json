@@ -1,0 +1,18 @@
+{
+    "@context": "https://www.w3.org/TR/did-1.1/#did-documents",
+    "id": "did:xrpl:2:rL7oLd4KDXcCfjPcCWpLF7WGATxPG7gcVp",
+    "verificationMethod": [
+        {
+            "id": "#key-1",
+            "type": "Ed25519VerificationKey",
+            "publicKey": "z99VQAReoFnorLNENGzEssAiCTzNVBuE6gSYwhtqbN5zD"
+        }
+    ],
+    "service": [
+        {
+            "id": "#issuer",
+            "type": "CredentialIssuer",
+            "serviceEndpoint": "https://issuer.universidade.br/credentials"
+        }
+    ]
+}

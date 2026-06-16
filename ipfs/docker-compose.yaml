@@ -1,0 +1,17 @@
+services:
+  ipfs:
+    image: ipfs/kubo:latest
+    container_name: ipfs
+    restart: unless-stopped
+
+    # API (5001) 
+    ports:
+      - "127.0.0.1:5001:5001"
+
+    volumes:
+      - ipfs_data:/data/ipfs
+      - ipfs_staging:/export
+
+volumes:
+  ipfs_data:
+  ipfs_staging:

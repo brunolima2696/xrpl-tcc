@@ -1,0 +1,11 @@
+{
+    "@context": "https://www.w3.org/TR/did-1.1/#did-documents",
+    "id": "did:xrpl:2:rNH4PgbHE4JCoH7PvSjFnrXv18A8qk4nJv",
+    "verificationMethod": [
+        {
+            "id": "#key-1",
+            "type": "Ed25519VerificationKey",
+            "publicKey": "zGsnZRxd7mqd7mzuHGDgCgdDpvnZH1fuX92SmMeRdZ6rU"
+        }
+    ]
+}
