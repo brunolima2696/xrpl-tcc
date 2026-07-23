@@ -1,3 +1,49 @@
+# Implementação do XRPL Lending Protocol
+
+## Criação do Public Vault
+
+```
+python loan_broker/create_public_vault.py
+```
+
+## Definição do Loan Broker
+
+```
+python loan_broker/set_loan_broker.py
+```
+
+## Adição de liquidez ao Vault pelo Depositor:
+
+```
+python depositor/deposit_to_vault.py
+```
+
+## Preparação dos termos do empréstimo pelo Loan Broker:
+
+```
+python loan_broker/prepare_loan.py
+```
+
+## Assinatura dos termos do empréstimo como contraparte pelo Borrower:
+
+```
+python borrower/sign_submit_loan.py
+```
+
+## Pagamento do empréstimo pelo Borrower:
+
+```
+python borrower/pay_loan.py
+```
+
+## Remoção do empréstimo finalizado do ledger:
+
+Remove o objeto `Loan` do ledger após finalizado o pagamento por parte do borrower.
+
+```
+python borrower/delete_loan.py
+```
+
 # XRPL
 
 Implementação das roles de Holder, Issuer e Verifier no ledger XRPL.

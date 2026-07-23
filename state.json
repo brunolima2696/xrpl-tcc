@@ -1,0 +1,114 @@
+{
+  "loan_broker": {
+    "address": "r9VSkPHFediMzCKwqvuWMazxjTsWTHntQp",
+    "seed": "sEdS82yBLdFhZSUNiiDHFZoWTNdcShA"
+  },
+  "vault": {
+    "vault_id": "3C89C8D63FF109CAFA41D985AC1AFBDBDA317392D69D154444670145B432C413",
+    "fields": {
+      "Account": "r3hVtPyoT297Ucpp4XarAU6fjSmQXfo8f1",
+      "AssetsMaximum": "1000000000",
+      "Owner": "r9VSkPHFediMzCKwqvuWMazxjTsWTHntQp",
+      "Sequence": 3462644,
+      "ShareMPTID": "000000014D723DC6609992BCA033D3BD0206FD075981E245",
+      "WithdrawalPolicy": 1
+    },
+    "tx_hash": "CD90042272656C86B9229BFBFBA186E0F92FF0459CFE70320AA4C497F67BD1AE"
+  },
+  "loan_broker_object": {
+    "loan_broker_id": "309DD6B61379A84BC8A53B039EBDF2CE96967A8BCC6A9F1CE95EA2D528BCDF8A",
+    "fields": {
+      "Account": "rwPC4Pr5fL14jCbn5RqE7RyyQ8uvzRyj3P",
+      "LoanSequence": 1,
+      "Owner": "r9VSkPHFediMzCKwqvuWMazxjTsWTHntQp",
+      "Sequence": 3462645,
+      "VaultID": "3C89C8D63FF109CAFA41D985AC1AFBDBDA317392D69D154444670145B432C413"
+    },
+    "tx_hash": "B8002A8E28DE59F5C25AE8BE9A48BA4B543536573F40AB3E874E7BD9D8E627E2"
+  },
+  "depositor": {
+    "address": "rUkb2PE6WPq4r2U4uwNSokjfbJHzoACan1",
+    "seed": "sEdSzxp9y6RWvtk7B8Ljbey8FHHZ7QQ"
+  },
+  "vault_deposit": {
+    "amount": "50000000",
+    "tx_hash": "45691F6C82910F7977A7461E1D19E1A1E26780512C3D902841FAB36AD52EDF89",
+    "result": "tesSUCCESS"
+  },
+  "pending_loan_set": {
+    "loan_broker_signed_tx": {
+      "account": "r9VSkPHFediMzCKwqvuWMazxjTsWTHntQp",
+      "transaction_type": "LoanSet",
+      "fee": "2",
+      "sequence": 3462646,
+      "last_ledger_sequence": 3870736,
+      "signing_pub_key": "EDF8B6D0309079F7646B541953F5B78267460688D288EC647A3B9311AFF9DC4B15",
+      "txn_signature": "8CAE807B74FA99B53897DBCFFB40F886F54E6E1BF94A8BAAB28E9717EBDC9B59137B4A1A7458C1F7491D06BD8C10FF12587575635CF6228490401522AA871504",
+      "loan_broker_id": "309DD6B61379A84BC8A53B039EBDF2CE96967A8BCC6A9F1CE95EA2D528BCDF8A",
+      "counterparty": "rNH4PgbHE4JCoH7PvSjFnrXv18A8qk4nJv",
+      "loan_origination_fee": "0",
+      "loan_service_fee": "0",
+      "late_payment_fee": "0",
+      "close_payment_fee": "0",
+      "overpayment_fee": 0,
+      "interest_rate": 0,
+      "late_interest_rate": 0,
+      "close_interest_rate": 0,
+      "overpayment_interest_rate": 0,
+      "principal_requested": "10000000",
+      "payment_total": 1,
+      "payment_interval": 300,
+      "grace_period": 60
+    },
+    "loan_broker": "r9VSkPHFediMzCKwqvuWMazxjTsWTHntQp",
+    "borrower": "rNH4PgbHE4JCoH7PvSjFnrXv18A8qk4nJv",
+    "loan_broker_id": "309DD6B61379A84BC8A53B039EBDF2CE96967A8BCC6A9F1CE95EA2D528BCDF8A",
+    "principal_requested": "10000000",
+    "payment_total": "1",
+    "payment_interval": "300",
+    "grace_period": "60"
+  },
+  "borrower": {
+    "address": "rNH4PgbHE4JCoH7PvSjFnrXv18A8qk4nJv"
+  },
+  "loan": {
+    "loan_id": "966BD70F30A2A493B336B31F7F6D69725B1D12CE3A441EACF3779C29BA7819CD",
+    "fields": {
+      "Borrower": "rNH4PgbHE4JCoH7PvSjFnrXv18A8qk4nJv",
+      "GracePeriod": 60,
+      "LoanBrokerID": "309DD6B61379A84BC8A53B039EBDF2CE96967A8BCC6A9F1CE95EA2D528BCDF8A",
+      "LoanSequence": 1,
+      "NextPaymentDueDate": 838087790,
+      "PaymentInterval": 300,
+      "PaymentRemaining": 1,
+      "PeriodicPayment": "10000000",
+      "PrincipalOutstanding": "10000000",
+      "StartDate": 838087490,
+      "TotalValueOutstanding": "10000000"
+    },
+    "principal_requested": "10000000",
+    "payment_total": "1",
+    "payment_interval": "300",
+    "grace_period": "60",
+    "tx_hash": "5062EFA786D74FABA8AA23BCA5B49965AEF612D3D0D50B2A3BF9BEE6C4998986",
+    "result": "tesSUCCESS"
+  },
+  "loan_payment": {
+    "amount": "10000000",
+    "tx_hash": "E286389658CCFE2730D97476E586AC9DFC0F6B2A783AB2C33E5AD692A52CA07F",
+    "result": "tesSUCCESS",
+    "loan_after_payment": {
+      "Borrower": "rNH4PgbHE4JCoH7PvSjFnrXv18A8qk4nJv",
+      "Flags": 0,
+      "GracePeriod": 60,
+      "LoanBrokerID": "309DD6B61379A84BC8A53B039EBDF2CE96967A8BCC6A9F1CE95EA2D528BCDF8A",
+      "LoanBrokerNode": "0",
+      "LoanSequence": 1,
+      "OwnerNode": "0",
+      "PaymentInterval": 300,
+      "PeriodicPayment": "10000000",
+      "PreviousPaymentDueDate": 838087790,
+      "StartDate": 838087490
+    }
+  }
+}
