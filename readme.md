@@ -53,7 +53,7 @@ sequenceDiagram
     XRPL-->>LB: Credentials registradas
 
     LB->>LB: Comparar com rules.json
-    LB->>LB: Validar aceite, expiração e regra any/all
+    LB->>LB: Validar aceite, expiração e regra
 
     alt Borrower autorizado
         LB->>LB: Preparar e assinar LoanSet
