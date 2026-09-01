@@ -32,8 +32,8 @@ document = {
 data = {    
     }
 
-# uri = "ipfs://" + cid + "/" + file_name
-uri = "string generica 123"
+uri = "ipfs://" + cid + "/" + file_name
+# uri = "string generica 123"
 
 # DID SET transaction
 did_set_txn = DIDSet(

@@ -1,44 +1,159 @@
 # Implementação do XRPL Lending Protocol
 
-## Criação do Public Vault
+```mermaid
+sequenceDiagram
+    autonumber
+
+    participant CI as Credential Issuer
+    participant LB as Vault Owner / Loan Broker
+    participant D as Depositor
+    participant B as Borrower
+    participant XRPL as XRP Ledger
+
+    Note over LB,XRPL: Configuração do Lending Protocol
+
+    LB->>XRPL: PermissionedDomainSet(AcceptedCredentials)
+    XRPL-->>LB: DomainID
+
+    LB->>XRPL: VaultCreate(DomainID, tfVaultPrivate)
+    XRPL-->>LB: VaultID
+
+    LB->>XRPL: LoanBrokerSet(VaultID)
+    XRPL-->>LB: LoanBrokerID
+
+    Note over CI,D: Autorização do Depositor
+
+    CI->>XRPL: CredentialCreate(Depositor, CredentialType)
+    XRPL-->>CI: CredentialID
+
+    D->>XRPL: CredentialAccept(Issuer, CredentialType)
+    XRPL-->>D: Credential aceita
+
+    D->>XRPL: VaultDeposit(VaultID, Amount)
+    XRPL->>XRPL: Consultar DomainID do Vault
+    XRPL->>XRPL: Validar Issuer e CredentialType
+    XRPL->>XRPL: Validar aceite e expiração
+
+    alt Credential válida
+        XRPL-->>D: Depósito aceito
+    else Credential inválida
+        XRPL-->>D: Depósito recusado
+    end
+
+    Note over CI,B: Autorização do Borrower
+
+    CI->>XRPL: CredentialCreate(Borrower, CredentialType)
+    XRPL-->>CI: CredentialID
+
+    B->>XRPL: CredentialAccept(Issuer, CredentialType)
+    XRPL-->>B: Credential aceita
+
+    B->>LB: Solicitar empréstimo
+    LB->>XRPL: Consultar Credentials do Borrower
+    XRPL-->>LB: Credentials registradas
+
+    LB->>LB: Comparar com rules.json
+    LB->>LB: Validar aceite, expiração e regra any/all
+
+    alt Borrower autorizado
+        LB->>LB: Preparar e assinar LoanSet
+        LB-->>B: LoanSet parcialmente assinado
+
+        B->>B: Validar termos e assinar
+        B->>XRPL: Submeter LoanSet com ambas as assinaturas
+        XRPL-->>B: LoanID e liberação dos fundos
+
+        B->>XRPL: LoanPay(pagamento integral)
+        XRPL-->>B: Pagamento confirmado
+
+        B->>XRPL: LoanDelete(LoanID)
+        XRPL-->>B: Loan removido
+    else Borrower não autorizado
+        LB-->>B: Solicitação rejeitada
+    end
+```
+
+## Loan Broker
+
+### Criação do Permissioned Domain
 
 ```
-python loan_broker/create_public_vault.py
+python loan_broker/create_permissioned_domain.py
 ```
 
-## Definição do Loan Broker
+### Criação do Private Vault associado ao DomainID
 
 ```
-python loan_broker/set_loan_broker.py
+python loan_broker/create_private_vault.py
 ```
 
-## Adição de liquidez ao Vault pelo Depositor:
+### Definição do Loan Broker associado ao Vault:
 
 ```
-python depositor/deposit_to_vault.py
+python loan_broker/set_permissioned_loan_broker.py
 ```
 
-## Preparação dos termos do empréstimo pelo Loan Broker:
+## Issuer
+
+### Emissão da credential associada ao Depositor:
+
+```
+python credential_issuer/issue_credential.py depositor
+```
+
+## Depositor
+
+### Aceitação da credential emitida pelo Issuer:
+
+```
+python depositor/accept_credential.py
+```
+
+### Adição de liquidez ao Vault:
+
+```
+python depositor/deposit_to_private_vault.py
+```
+
+## Issuer
+
+### Emissão da credential associada ao Borrower: 
+
+```
+python credential_issuer/issue_credential.py borrower
+```
+
+## Borrower:
+
+### Aceitação da credential emitida pelo Issuer:
+
+```
+python borrower/accept_credential.py
+```
+
+## Loan Broker:
+
+### Preparação do empréstimo e validação da credential:
 
 ```
 python loan_broker/prepare_loan.py
 ```
 
-## Assinatura dos termos do empréstimo como contraparte pelo Borrower:
+## Borrower:
+
+### Assinatura e submissão do empréstimo:
 
 ```
 python borrower/sign_submit_loan.py
 ```
 
-## Pagamento do empréstimo pelo Borrower:
+### Quitação do empréstimo:
 
 ```
 python borrower/pay_loan.py
 ```
 
-## Remoção do empréstimo finalizado do ledger:
-
-Remove o objeto `Loan` do ledger após finalizado o pagamento por parte do borrower.
+### Remoção do empréstimo finalizado:
 
 ```
 python borrower/delete_loan.py

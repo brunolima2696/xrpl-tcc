@@ -167,7 +167,7 @@ def build_ui() -> None:
             "person",
             main_actions=[
                 ("Define Local DID Data", "holder/define_local_did_data.py"),
-                ("Create DID Document", "holder/xrpl_did/create_did_document"),
+                ("Create DID Document", "holder/xrpl_did/create_did_document.py"),
                 ("Accept XRPL Credential", "holder/xrpl_credential/accept_credential.py"),
                 ("Create Verifiable Presentation","holder/create_verifiable_presentation.py"),
             ],

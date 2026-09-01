@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "depositor": {
+    "issuers": [
+      {
+        "address": "rL7oLd4KDXcCfjPcCWpLF7WGATxPG7gcVp",
+        "credentialTypes": [
+          "DepositorTypeA",
+          "DepositorTypeB"
+        ]
+      },
+      {
+        "address": "r9VSkPHFediMzCKwqvuWMazxjTsWTHntQp",
+        "credentialTypes": [
+          "DepositorTypeC"
+        ]
+      }
+    ]
+  },
+  "borrower": {
+    "match": "any",
+    "issuers": [
+      {
+        "address": "rL7oLd4KDXcCfjPcCWpLF7WGATxPG7gcVp",
+        "credentialTypes": [
+          "BorrowerTypeA",
+          "BorrowerTypeB"
+        ]
+      },
+      {
+        "address": "r9VSkPHFediMzCKwqvuWMazxjTsWTHntQp",
+        "credentialTypes": [
+          "BorrowerTypeC"
+        ]
+      }
+    ]
+  }
+}

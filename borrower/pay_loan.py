@@ -4,103 +4,133 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from xrpl.clients import JsonRpcClient
-from xrpl.models.transactions import LoanPay
+from xrpl.models.transactions import LoanPay, LoanPayFlag
 from xrpl.transaction import submit_and_wait
 from xrpl.wallet import Wallet
 
 
-load_dotenv()
-
-JSON_RPC_URL = os.getenv("LENDING_DEVNET_JSON_RPC_URL")
-STATE_FILE = Path(os.getenv("STATE_FILE_PATH"))
-
-BORROWER_SEED = os.getenv("BORROWER_SEED")
-LOAN_PAYMENT_AMOUNT_DROPS = "10000000"
-
-TF_LOAN_LATE_PAYMENT = 262144 # Pagamento após o vencimento
-TF_LOAN_FULL_PAYMENT = 131072 # Pagamento total antecipado
-
-TF_LOAN_PAYMENT = TF_LOAN_LATE_PAYMENT
-
-client = JsonRpcClient(JSON_RPC_URL)
+# Parâmetros opcionais. Mantenha None para usar .env e state.json.
+JSON_RPC_URL_OVERRIDE = None
+STATE_FILE_PATH_OVERRIDE = None
+BORROWER_SEED_OVERRIDE = None
+LOAN_ID_OVERRIDE = None
+LOAN_PAYMENT_AMOUNT_DROPS_OVERRIDE = None
+LOAN_PAY_FLAGS_OVERRIDE: int | None = None
 
 
-def load_state():
-    if STATE_FILE.exists():
-        return json.loads(STATE_FILE.read_text())
-    return {}
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(PROJECT_DIR / ".env")
+
+JSON_RPC_URL = JSON_RPC_URL_OVERRIDE or os.getenv("LENDING_DEVNET_JSON_RPC_URL")
+STATE_FILE = Path(
+    STATE_FILE_PATH_OVERRIDE
+    or os.getenv("STATE_FILE_PATH", str(PROJECT_DIR / "state.json"))
+)
+
+BORROWER_SEED = BORROWER_SEED_OVERRIDE or os.getenv("BORROWER_SEED")
+LOAN_PAYMENT_AMOUNT_DROPS = LOAN_PAYMENT_AMOUNT_DROPS_OVERRIDE or os.getenv(
+    "LOAN_PAYMENT_AMOUNT_DROPS", "10000000"
+)
+LOAN_PAY_FLAGS = (
+    LOAN_PAY_FLAGS_OVERRIDE
+    if LOAN_PAY_FLAGS_OVERRIDE is not None
+    else LoanPayFlag.TF_LOAN_FULL_PAYMENT
+)
 
 
-def save_state(state):
-    STATE_FILE.write_text(json.dumps(state, indent=2))
+def load_state() -> dict:
+    if not STATE_FILE.exists():
+        return {}
+    return json.loads(STATE_FILE.read_text(encoding="utf-8"))
 
 
-def find_modified_ledger_entry(response, ledger_entry_type):
-    affected_nodes = response.result["meta"]["AffectedNodes"]
+def save_state(state: dict) -> None:
+    STATE_FILE.write_text(
+        json.dumps(state, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
 
-    for node in affected_nodes:
+
+def find_modified_loan(response) -> dict | None:
+    for node in response.result["meta"]["AffectedNodes"]:
         modified = node.get("ModifiedNode")
-        if modified and modified["LedgerEntryType"] == ledger_entry_type:
+        if modified and modified["LedgerEntryType"] == "Loan":
             return {
-                "id": modified["LedgerIndex"],
-                "fields": modified.get("FinalFields", {})
+                "loan_id": modified["LedgerIndex"],
+                "fields": modified.get("FinalFields", {}),
             }
 
     return None
 
 
-def main():
+def build_full_payment_transaction(
+    borrower_address: str,
+    loan_id: str,
+    amount: str,
+) -> LoanPay:
+    return LoanPay(
+        account=borrower_address,
+        loan_id=loan_id,
+        amount=amount,
+        flags=LOAN_PAY_FLAGS,
+    )
+
+
+def main() -> None:
     state = load_state()
 
-    borrower_wallet = Wallet.from_seed(BORROWER_SEED)
+    if not JSON_RPC_URL:
+        raise ValueError("LENDING_DEVNET_JSON_RPC_URL não está definido.")
+    if not BORROWER_SEED:
+        raise ValueError("BORROWER_SEED não está definido.")
 
-    loan_id = state["loan"]["loan_id"]
+    loan = state.get("loan")
+    loan_id = LOAN_ID_OVERRIDE
+    if loan_id is None and loan:
+        loan_id = loan.get("loan_id")
+    if not loan_id:
+        raise ValueError("Loan ausente no estado.")
+
+    borrower_wallet = Wallet.from_seed(BORROWER_SEED)
     payment_amount = LOAN_PAYMENT_AMOUNT_DROPS
 
-    print("Borrower / Holder:")
+    print("Borrower:")
     print(borrower_wallet.address)
-
     print("LoanID:")
     print(loan_id)
-
-    print("Payment amount:")
+    print("Full payment amount:")
     print(payment_amount)
 
-    tx = LoanPay(
-        account=borrower_wallet.address,
+    client = JsonRpcClient(JSON_RPC_URL)
+    transaction = build_full_payment_transaction(
+        borrower_address=borrower_wallet.address,
         loan_id=loan_id,
         amount=payment_amount,
-        flags=TF_LOAN_PAYMENT
     )
-
     response = submit_and_wait(
-        tx,
-        client,
-        borrower_wallet
+        transaction=transaction,
+        client=client,
+        wallet=borrower_wallet,
     )
 
-    loan = find_modified_ledger_entry(response, "Loan")
+    transaction_result = response.result["meta"]["TransactionResult"]
+    if transaction_result != "tesSUCCESS":
+        raise RuntimeError(f"LoanPay falhou com resultado {transaction_result}.")
 
+    loan_after_payment = find_modified_loan(response)
     state["loan_payment"] = {
         "amount": payment_amount,
+        "full_payment": True,
         "tx_hash": response.result["hash"],
-        "result": response.result["meta"]["TransactionResult"]
+        "result": transaction_result,
     }
-
-    if loan:
-        state["loan_payment"]["loan_after_payment"] = loan["fields"]
-
+    if loan_after_payment:
+        state["loan_payment"]["loan_after_payment"] = loan_after_payment["fields"]
     save_state(state)
 
     print("LoanPay result:")
-    print(response.result["meta"]["TransactionResult"])
-
-    if loan and "TotalValueOutstanding" in loan["fields"]:
-        print("TotalValueOutstanding:")
-        print(loan["fields"]["TotalValueOutstanding"])
-    else:
-        print("Loan totalmente pago ou sem saldo pendente na metadata.")
-
+    print(transaction_result)
     print("Tx hash:")
     print(response.result["hash"])
 
