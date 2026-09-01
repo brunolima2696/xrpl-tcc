@@ -61,6 +61,11 @@ sequenceDiagram
 
         B->>B: Validar termos e assinar
         B->>XRPL: Submeter LoanSet com ambas as assinaturas
+        alt Implementação Local
+          XRPL->>XRPL: Consultar DomainID do Vault
+          XRPL->>XRPL: Validar Issuer e CredentialType
+          XRPL->>XRPL: Validar aceite e expiração
+        end
         XRPL-->>B: LoanID e liberação dos fundos
 
         B->>XRPL: LoanPay(pagamento integral)
