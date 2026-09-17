@@ -1,80 +1,96 @@
 # Implementação do XRPL Lending Protocol
 
+### Configuração do Lending Protocol
+
 ```mermaid
 sequenceDiagram
     autonumber
 
-    participant CI as Credential Issuer
-    participant LB as Vault Owner / Loan Broker
-    participant D as Depositor
-    participant B as Borrower
+    participant LB as Loan Broker
     participant XRPL as XRP Ledger
 
-    Note over LB,XRPL: Configuração do Lending Protocol
-
-    LB->>XRPL: PermissionedDomainSet(AcceptedCredentials)
+    LB->>LB: Definir critérios de elegibilidade<br/>(rules.json)
+    LB->>XRPL: PermissionedDomainSet<br/>(Depositor Domain: critérios do Depositante)
     XRPL-->>LB: DomainID
 
-    LB->>XRPL: VaultCreate(DomainID, tfVaultPrivate)
+    Note over LB,XRPL: Extensão protocolar proposta
+    LB->>XRPL: PermissionedDomainSet<br/>(Borrower Domain: critérios do Tomador)
+    XRPL-->>LB: BorrowerDomainID
+
+    LB->>XRPL: VaultCreate<br/>(DomainID, BorrowerDomainID, tfVaultPrivate)
     XRPL-->>LB: VaultID
 
     LB->>XRPL: LoanBrokerSet(VaultID)
     XRPL-->>LB: LoanBrokerID
+```
 
-    Note over CI,D: Autorização do Depositor
+### Autorização do Depositante
 
-    CI->>XRPL: CredentialCreate(Depositor, CredentialType)
-    XRPL-->>CI: CredentialID
+```mermaid
+sequenceDiagram
+    autonumber
 
-    D->>XRPL: CredentialAccept(Issuer, CredentialType)
+    participant EC as Emissor de Credenciais
+    participant D as Depositante
+    participant XRPL as XRP Ledger
+
+    EC->>XRPL: CredentialCreate<br/>(Subject, CredentialType)
+    XRPL-->>EC: CredentialID
+
+    D->>XRPL: CredentialAccept<br/>(Issuer, CredentialType)
     XRPL-->>D: Credential aceita
 
     D->>XRPL: VaultDeposit(VaultID, Amount)
     XRPL->>XRPL: Consultar DomainID do Vault
-    XRPL->>XRPL: Validar Issuer e CredentialType
-    XRPL->>XRPL: Validar aceite e expiração
+    XRPL->>XRPL: Consultar critérios do Permissioned Domain
+    XRPL->>XRPL: Validar Issuer, CredentialType,<br/>aceite, expiração e revogação
 
     alt Credential válida
         XRPL-->>D: Depósito aceito
     else Credential inválida
         XRPL-->>D: Depósito recusado
     end
+```
 
-    Note over CI,B: Autorização do Borrower
+### Autorização do Tomador
 
-    CI->>XRPL: CredentialCreate(Borrower, CredentialType)
-    XRPL-->>CI: CredentialID
+```mermaid
+sequenceDiagram
+    autonumber
 
-    B->>XRPL: CredentialAccept(Issuer, CredentialType)
-    XRPL-->>B: Credential aceita
+    participant EC as Emissor de Credenciais
+    participant T as Tomador
+    participant LB as Loan Broker
+    participant XRPL as XRP Ledger
 
-    B->>LB: Solicitar empréstimo
-    LB->>XRPL: Consultar Credentials do Borrower
-    XRPL-->>LB: Credentials registradas
+    EC->>XRPL: CredentialCreate<br/>(Subject, CredentialType)
+    XRPL-->>EC: CredentialID
 
-    LB->>LB: Comparar com rules.json
-    LB->>LB: Validar aceite, expiração e regra
+    T->>XRPL: CredentialAccept<br/>(Issuer, CredentialType)
+    XRPL-->>T: Credential aceita
 
-    alt Borrower autorizado
-        LB->>LB: Preparar e assinar LoanSet
-        LB-->>B: LoanSet parcialmente assinado
+    T->>LB: Solicitar empréstimo
+    LB->>LB: Realizar underwriting off-chain
+    LB->>LB: Preparar e assinar<br/>LoanSet(VaultID, LoanBrokerID, termos)
+    LB-->>T: LoanSet parcialmente assinado
 
-        B->>B: Validar termos e assinar
-        B->>XRPL: Submeter LoanSet com ambas as assinaturas
-        alt Implementação Local
-          XRPL->>XRPL: Consultar DomainID do Vault
-          XRPL->>XRPL: Validar Issuer e CredentialType
-          XRPL->>XRPL: Validar aceite e expiração
-        end
-        XRPL-->>B: LoanID e liberação dos fundos
+    T->>T: Validar termos e assinar
+    T->>XRPL: Submeter LoanSet
 
-        B->>XRPL: LoanPay(pagamento integral)
-        XRPL-->>B: Pagamento confirmado
+    Note over T,XRPL: Extensão protocolar proposta
+    
+    XRPL->>XRPL: Consultar BorrowerDomainID do Vault
+    XRPL->>XRPL: Consultar critérios do Permissioned Domain
+    XRPL->>XRPL: Validar Issuer, CredentialType,<br/>aceite, expiração e revogação
 
-        B->>XRPL: LoanDelete(LoanID)
-        XRPL-->>B: Loan removido
-    else Borrower não autorizado
-        LB-->>B: Solicitação rejeitada
+    alt Credential válida
+        XRPL-->>T: Empréstimo criado e fundos liberados
+        T->>XRPL: LoanPay(LoanID, Amount)
+        XRPL-->>T: Pagamento confirmado
+        T->>XRPL: LoanDelete(LoanID)
+        XRPL-->>T: Empréstimo encerrado
+    else Credential inválida
+        XRPL-->>T: LoanSet recusado
     end
 ```
 

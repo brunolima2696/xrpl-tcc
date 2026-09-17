@@ -1,0 +1,3 @@
+[submodule "xrpl-module"]
+	path = xrpl-module
+	url = https://github.com/brunolima2696/xrpl-module.git
