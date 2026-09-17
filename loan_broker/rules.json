@@ -18,7 +18,6 @@
     ]
   },
   "borrower": {
-    "match": "any",
     "issuers": [
       {
         "address": "rL7oLd4KDXcCfjPcCWpLF7WGATxPG7gcVp",

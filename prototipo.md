@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-O protótipo aplica o framework de identidade autossoberana ao *Lending Protocol* (XLS-66) do XRP Ledger (XRPL). Seu objetivo é controlar a participação de Depositantes e Tomadores por meio de atestações verificáveis, mantendo no ledger apenas os elementos necessários à autorização e à auditoria.
+O protótipo aplica o framework de identidade auto soberana ao *Lending Protocol* (XLS-66) do XRP Ledger (XRPL). Seu objetivo é controlar a participação de Depositantes e Tomadores por meio de atestações verificáveis, mantendo no ledger apenas os elementos necessários à autorização e à auditoria.
 
 O ambiente é uma Prova de Conceito local e isolada. Ele permite criar contas, emitir e aceitar *Credentials*, configurar políticas de acesso e executar o ciclo de um empréstimo.
 
@@ -25,7 +25,7 @@ No *Lending Protocol* atual, o Loan Broker e o proprietário do *Vault* são a m
 | *Lending Protocol* (XLS-66) | Criação, pagamento e encerramento dos empréstimos. |
 | *Credential* (XLS-70) | Atestação on-chain vinculada ao *Credential Issuer*, ao titular e ao `CredentialType`. |
 | *Permissioned Domain* (XLS-80) | Política de acesso formada por combinações aceitas de *Credential Issuer* e `CredentialType`. |
-| *Decentralized Identifier* (DID, XLS-40) | Âncora de identidade prevista pelo framework teórico. |
+| *Decentralized Identifier* (DID, XLS-40) | Âncora de identidade prevista pelo framework. |
 | Docker | Compilação, execução do nó local, persistência do banco de dados e logs do ledger em volumes locais. |
 | Python e `xrpl-py` | Orquestração das transações e dos papéis da aplicação. |
 | JSON | Configuração da rede, das contas, do estado e das regras de elegibilidade. |
