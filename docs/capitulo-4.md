@@ -116,12 +116,15 @@ Relaciona requisitos, resultados esperados e evidências.
 
 ## Restrições e Decisões de Projeto
 
-| ID | Restrição/Decisão | Descrição |
+| ID | Restrição | Descrição |
 |---|---|---|
 | RST01 | Critérios alternativos | Um *Permissioned Domain* exige ao menos um par aceito de emissor e `CredentialType`. |
 | RST02 | Correspondência Exata | Emissor e `CredentialType` devem corresponder exatamente ao critério definido. |
 | RST03 | Limites de Representação | `CredentialType` possui até 64 bytes e o domínio aceita até dez combinações. |
 | RST04 | Propriedade do Vault | O Loan Broker e o proprietário do *Vault* correspondem à mesma conta. |
+
+| ID | Decisão | Descrição |
+|---|---|---|
 | DP01 | Separação das Políticas | `DomainID` controla Depositantes e `BorrowerDomainID` controla Tomadores. |
 | DP02 | Vinculação da Política | `LoanSet` recebe `VaultID` e obtém a política do Tomador a partir do *Vault*. |
 
